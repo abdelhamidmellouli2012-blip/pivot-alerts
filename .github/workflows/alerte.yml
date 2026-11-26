@@ -1,0 +1,19 @@
+name: Alertes pivots
+on:
+  schedule:
+    - cron: "2 * * * *"
+  workflow_dispatch:
+jobs:
+  alerte:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install yfinance pandas requests
+      - run: python alerte.py
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          MANUEL: ${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}
